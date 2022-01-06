@@ -4,5 +4,5 @@ from . import views
 app_name = 'bookmarks'
 
 urlpatterns = [
-    path('',views.sss),
+    path('create/',views.image_create,name='image_create'),
 ]
