@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}PostGram{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'accounts/css/base.css' %}" />
+  </head>
+  <body>
+    <div id="header">
+      <span class="logo">PostGram</span>
+      {% if request.user.is_authenticated %}
+        <ul class="menu">
+          <li {% if section == 'dashboard'%}class="selected" {% endif %}>
+            <a href="#">Dashboard</a>
+          </li>
+          <li {% if section == 'images'%}class="selected" {% endif %}>
+            <a href="#">Images</a>
+          </li>
+          <li {% if section == 'people'%}class="selected" {% endif %}>
+            <a href="#">People</a>
+          </li>
+        </ul>
+      {% endif %}
+      <span class="user">
+        {% if request.user.is_authenticated %}
+          Hello {{ request.user.username }}, <a href="{% url 'accounts:logout' %}">Log Out</a>
+          {% else %}
+          <a href="{% url 'accounts:login' %}">Log In</a>
+        {% endif %}
+      </span>
+    </div>
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags}}">{{ message|safe}}<a href="#" class="close">X</a></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <div id="content">{% block content%} {% endblock content %}</div>
+  </body>
+</html>

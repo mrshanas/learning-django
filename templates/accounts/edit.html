@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %} Edit Profile {% endblock title %}
+
+{% block content %}
+    <h1>Edit your account</h1>
+    {% if user_form.errors and profile_form.errors %}
+        <p>Failed to update</p>
+
+    {% else %}
+        <form action="" method="post" enctype="multipart/form-data">
+            {{ user_form.as_p }}
+            {{ profile_form.as_p }}
+            {% csrf_token %}
+            <input type="submit" value="Edit">
+        </form>
+    {% endif %}
+ 
+    
+{% endblock content %}

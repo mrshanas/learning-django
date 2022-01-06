@@ -1,0 +1,9 @@
+__pycache__
+media/
+venv/
+.env
+.vscode
+.idea
+cert.crt
+cert.key
+db.sqlite3
