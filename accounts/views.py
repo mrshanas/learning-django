@@ -10,7 +10,7 @@ from django.contrib import messages
 # Create your views here.
 # superuser
 # username: shanas
-# password:postgram789
+# password:postgram
 
 # --user 2--
 # username:nassibu

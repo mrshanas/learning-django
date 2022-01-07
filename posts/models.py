@@ -4,8 +4,8 @@ from django.utils.text import slugify
 
 # Create your models here.
 class Image(models.Model):
-    """Handling images"""
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='images_created',on_delete=models.CASCADE)
+    """Enabling image sharing"""
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='image_created',on_delete=models.CASCADE)
 
     title = models.CharField(max_length=200)
 
@@ -19,15 +19,14 @@ class Image(models.Model):
 
     created = models.DateField(auto_now_add=True,db_index=True)
 
-    users_like = models.ManyToManyField(settings.AUTH_USER_MODEL,related_name='images_liked',blank=True)
+    users_like = models.ManyToManyField(to=settings.AUTH_USER_MODEL,related_name='images_liked',blank=True)
+
 
     def __str__(self):
         return self.title
 
     def save(self,*args,**kwargs):
+        # if slug is not provided it auto-creates
         if not self.slug:
-            # automatically creating SEO friendly urls
-            # with title attribute
-            # same as admin prepopulate
             self.slug = slugify(self.title)
-            super().save(*args,**kwargs)
+        super().save(*args,**kwargs)

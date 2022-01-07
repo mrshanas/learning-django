@@ -3,5 +3,9 @@
 
 {% block content %}
     <h1>Dashboard</h1>
-    <p>Welcome to your dashboard you can <a href="{% url 'accounts:edit'%}">edit</a> your profile or <a href="{% url 'accounts:password_change' %}">change your password</a></p>
+    {% with total_image_created=request.user.image_created.count  %}
+        <p>Welcome to your dashboard you've created {{ total_image_created}} image{{ total_image_created|pluralize}}</p>
+    {% endwith %}
+    <p>Drag the following button to your bookmarks toolbar to bookmark images from other websites > <a href="javascript:{% include 'posts/image/bookmarklet_launcher.js'%}" class="button">Bookmark It</a></p>
+    <p>You can <a href="{% url 'accounts:edit'%}">edit</a> your profile or <a href="{% url 'accounts:password_change' %}">change your password</a></p>
 {% endblock content %}

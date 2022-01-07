@@ -41,7 +41,8 @@ ALLOWED_HOSTS = ['localhost','mysite.com','127.0.0.1']
 INSTALLED_APPS = [
     # authenticating users
     'accounts',
-    'bookmarks',
+    'posts',
+    # 'bookmarks',
     # 'social_django',
     'django.contrib.admin',
     'django.contrib.auth',
