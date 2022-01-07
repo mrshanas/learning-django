@@ -14,6 +14,29 @@
         bookmarklet();
     }
     else{
-            
-    }
-})
+          // check for conflicts
+          const conflict = typeof window.$ != 'undefined';
+          // Create the script and point to Google API
+ var script = document.createElement('script');
+ script.src = '//ajax.googleapis.com/ajax/libs/jquery/' +
+ jquery_version + '/jquery.min.js';
+ // Add the script to the 'head' for processing
+ document.head.appendChild(script);
+ // Create a way to wait until script loading
+ var attempts = 15;
+ (function(){
+ // Check again if jQuery is undefined
+ if(typeof window.jQuery == 'undefined') {
+ if(--attempts > 0) {
+ // Calls himself in a few milliseconds
+ window.setTimeout(arguments.callee, 250)
+ } else {
+ // Too much attempts to load, send error
+ alert('An error occurred while loading jQuery')
+ }
+ } else {
+ bookmarklet();
+ }
+ })();
+ }
+})()  
