@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     # authenticating users
     'accounts',
     'posts',
-    # 'bookmarks',
     # 'social_django',
     'django.contrib.admin',
     'django.contrib.auth',
