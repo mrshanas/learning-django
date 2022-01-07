@@ -1,32 +1,21 @@
 from django.db import models
 from django.conf import settings
-from django.utils.text import slugify
 
 # Create your models here.
-class Image(models.Model):
-    """Enabling image sharing"""
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,related_name='image_created',on_delete=models.CASCADE)
-
+class Post(models.Model):
+    """Allow users to post pictures"""
     title = models.CharField(max_length=200)
 
-    slug = models.SlugField(max_length=200,blank=True)
+    user = models.ForeignKey(to=settings.AUTH_USER_MODEL,related_name='post_created',on_delete=models.CASCADE)
 
-    url = models.URLField()
+    caption = models.TextField(blank=True)
 
-    image = models.ImageField(upload_to='images/%Y/%m/%d')
+    image = models.ImageField(upload_to='posts/%Y/%m/%d')
 
-    description = models.TextField(blank=True)
+    created = models.DateTimeField(auto_now_add=True)
 
-    created = models.DateField(auto_now_add=True,db_index=True)
-
-    users_like = models.ManyToManyField(to=settings.AUTH_USER_MODEL,related_name='images_liked',blank=True)
-
+    class Meta:
+        ordering = ['-created',]
 
     def __str__(self):
-        return self.title
-
-    def save(self,*args,**kwargs):
-        # if slug is not provided it auto-creates
-        if not self.slug:
-            self.slug = slugify(self.title)
-        super().save(*args,**kwargs)
+        return f"posts by {self.user} created"

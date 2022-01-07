@@ -1,27 +1,22 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from .forms import ImageCreateForm
+from .forms import PostCreateForm
+from .models import Post
 
 # Create your views here.
 @login_required
-def create_image(request):
-    """Create Images"""
-    if request.method =='POST':
-        form = ImageCreateForm(data=request.POST)
-
-        if form.is_valid():
-            cd = form.cleaned_data
-            new_item = form.save(commit=False)
-            new_item.user = request.user
-            new_item.save()
-            messages.success(request,"Successfully Added an Image")
-
-            # redirect to
-            return redirect(new_item.get_absolute_url())
+def post_create(request):
+    """Enable users create posts"""
+    if request.method != 'POST':
+        form = PostCreateForm(data=request.GET)
 
     else:
-        # this means the user bookmarked via GET method
-        form = ImageCreateForm(data=request.GET)
+        form = PostCreateForm(data=request.POST)
 
-    return render(request,'posts/image/create.html',{'form':form,'section':'images'})
+        if form.is_valid():
+            new_form = form.save(commit=False)
+            new_form.user = request.user
+            new_form.save()
+            return redirect('accounts:dashboard')
+
+    return render(request,'posts/create.html',{'form':form})

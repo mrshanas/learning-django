@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import Image
-# Register your models here.
-@admin.register(Image)
-class ImageAdmin(admin.ModelAdmin):
-    """Managing images"""
+from .models import Post
 
-    list_display = ('title','url','slug','user','created',)
+# Register your models here.
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+
+    list_display = ['title','caption','image','created']
 
     list_filter = ('created',)
