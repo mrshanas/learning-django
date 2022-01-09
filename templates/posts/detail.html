@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% block title %}{{ post.title }} | {{ user }}{% endblock title %}
+{% block content %}
+    <h1>{{ post.title }}</h1>
+    <a href="{{ post.image.url }}">
+        <img src="{% thumbnail post.image 300x0 quality=100%}" alt="" class="image-detail">
+    </a>
+    {% comment %} <img src="{% thumbnail post.image 300x0 %}" alt=""> {% endcomment %}
+    {% with total_likes=post.users_like.count  %}
+        <div class="image-info">
+            <div class="">
+                <span class="count">
+                    {{ total_likes }} like{{ total_likes|pluralize}}
+                </span>
+            </div>
+            {{ post.caption|linebreaks }}
+        </div>
+        <div class="image-likes">
+            {% for user in post.users_like.all  %}
+                <div class="">
+                    <img src="{{ user.photo }}" alt="">
+                    <p>{{ user.username }}</p>
+                </div>
+                {% empty %}
+                Nobody likes this image yet
+            {% endfor %}
+        </div>
+    {% endwith %}
+
+{% endblock content %}
