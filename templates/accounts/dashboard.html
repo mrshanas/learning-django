@@ -7,4 +7,5 @@
         <p>Welcome to your dashboard you've created {{ total_post_created}} post{{ total_post_created|pluralize}}</p>
     {% endwith %}
     <p>You can <a href="{% url 'accounts:edit'%}">edit</a> your profile or <a href="{% url 'accounts:password_change' %}">change your password</a></p>
+    <a href="{% url 'posts:create'%}">Post</a>
 {% endblock content %}

@@ -14,10 +14,10 @@
       {% if request.user.is_authenticated %}
         <ul class="menu">
           <li {% if section == 'dashboard'%}class="selected" {% endif %}>
-            <a href="#">Dashboard</a>
+            <a href="{% url 'accounts:dashboard' %}">Dashboard</a>
           </li>
           <li {% if section == 'images'%}class="selected" {% endif %}>
-            <a href="#">Images</a>
+            <a href="{% url 'posts:post_list' %}">Images</a>
           </li>
           <li {% if section == 'people'%}class="selected" {% endif %}>
             <a href="#">People</a>
@@ -40,5 +40,25 @@
       </ul>
     {% endif %}
     <div id="content">{% block content%} {% endblock content %}</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/
+jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+<script>
+  const csrftoken = Cookies.get('csrftoken');
+  const csrfSafeMethod = (method)=>{
+    // these HTTP methods do not require csrf protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+  }
+  $.ajaxSetup({
+    beforeSend:function(xhr,settings){
+      if(!csrfSafeMethod(settings.type)&&!this.crossDomain){
+        xhr.setRequestHeader("X-CSRFToken",csrftoken);
+      }
+    }
+  })
+  $(document).ready(function(){
+    {% block domready %}{% endblock domready %}
+  });
+</script>
   </body>
 </html>

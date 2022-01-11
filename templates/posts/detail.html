@@ -7,17 +7,28 @@
         <img src="{% thumbnail post.image 300x0 quality=100%}" alt="" class="image-detail">
     </a>
     {% comment %} <img src="{% thumbnail post.image 300x0 %}" alt=""> {% endcomment %}
-    {% with total_likes=post.users_like.count  %}
+    {% with total_likes=post.users_like.count users_like=post.users_like.all %}
         <div class="image-info">
             <div class="">
                 <span class="count">
-                    {{ total_likes }} like{{ total_likes|pluralize}}
+                    <span class="total">{{ total_likes }}</span> like{{ total_likes|pluralize}}
                 </span>
+                <a href="#" 
+                class="like button"
+                data-id="{{post.id}}"
+                data-action="{% if request.user in users_like %}un{% endif %}like"
+                >
+                {% if request not in users_like %}
+                    Like
+                    {% else %}
+                    Unlike
+                {% endif %}
+                </a>
             </div>
             {{ post.caption|linebreaks }}
         </div>
         <div class="image-likes">
-            {% for user in post.users_like.all  %}
+            {% for user in users_like  %}
                 <div class="">
                     <img src="{{ user.photo }}" alt="">
                     <p>{{ user.username }}</p>
@@ -29,3 +40,25 @@
     {% endwith %}
 
 {% endblock content %}
+{% block domready %}
+        $('a.like').click(function(e){
+            e.preventDefault();
+            $.post('{% url 'posts:like' %}',{
+                id:$(this).data('id'),
+                action:$(this).data('action')
+            },function(data){
+                if(data['status']=='ok'){
+                    var previousAction = $('a.like').data('action');
+                    // toggle data-action
+                    $('a.like').data('action',previousAction == 'like'?'unlike':'like');
+
+                    // toggle link text
+                    $('a.like').text(previousAction == 'like'?'Unlike':'Like' );
+
+                    // update total likes
+                    var previousLikes = parseInt($('span.count .total').text());
+                    $('span.count .total').text(previousAction == 'like'?previousLikes+1:previousLikes-1);
+                }
+            });
+        });
+{% endblock domready %}
