@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 import environ
+from django.urls import reverse_lazy
 
 env = environ.Env(
     DEBUG = (bool,False)
@@ -35,6 +36,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost','mysite.com','127.0.0.1']
 
+# override default get_abs_url for mentioned models
+
+ABSOLUTE_URL_OVERRIDES = {
+    'auth.user':lambda u: reverse_lazy('posts:user_detail',args=[u.username])
+}
 
 # Application definition
 

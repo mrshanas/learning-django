@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% block title %}{{ user.username }}{% endblock title %}
+{% block content %}
+    <h1>{{ user.username }}</h1>
+    <div class="profile-info">
+        <img src="{% thumbnail user.profile.photo 180x180 %}" alt="" class="user-detail">
+    </div>
+    {% with total_followers=user.followers.count %}
+        <span class="count">
+            <span class="total">
+                {{ total_followers }}
+            </span>
+            follower{{ total_followers|pluralize }}
+        </span>
+        <a href="#" 
+        data-id="{{ user.id }}" 
+        data-action="{% if request.user in user.followers.all %}un{% endif%}follow" 
+        class="follow button"
+        >
+        {% if request.user not in user.followers.all %}
+            Follow
+            {% else %}
+            Unfollow
+        {% endif %}
+        </a>
+   
+    {% endwith %}
+{% endblock content %}
+{% block domready %}
+        $('a.follow').click(function(e){
+            e.preventDefault();
+            $.post("{% url 'posts:user_follow' %}",{
+                id:$(this).data('id'),
+                action:$(this).data('action')
+            },
+            function(data){
+                if(data['status'] == 'ok'){
+                    var previousAction = $('a.follow').data('action');
+
+                    // toggle data-action
+                    $('a.follow').data('action',previousAction == 'follow'?'unfollow':'follow');
+                    // toggle link text
+                    $('a.follow').text(previousAction == 'follow'?'Unfollow':'Follow');
+                    // update total followers
+                    var previousFollowers = parseInt($('span.count .total').text());
+                    $('span.count .total').text(previousAction=='follow'?previousFollowers+1:previousFollowers-1);
+                }
+            })
+        })
+{% endblock domready %}
