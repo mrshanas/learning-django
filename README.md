@@ -1,2 +1,1 @@
-# Postgram
-A social website made with django web framework
+# Learning Django Web Framework
